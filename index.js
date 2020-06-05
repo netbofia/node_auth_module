@@ -1,0 +1,1 @@
+//Generate a SQL file for the used datamodel.

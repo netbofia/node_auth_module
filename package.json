@@ -1,0 +1,31 @@
+{
+  "name": "node_auth_module",
+  "version": "1.0.0",
+  "description": "Authentication module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./app.js",
+    "test": "npm run test-unit",
+    "test-i": "npm run test-unit-inpect",
+    "test-unit": "NODE_ENV=test mocha --exit 'libs/authentication.spec.js'",
+    "test-unit-inpect": "NODE_ENV=test mocha --inspect --exit 'libs/authentication.spec.js'",
+    "test-all": "NODE_ENV=test mocha --exit '**/*.spec.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netbofia/node_auth_module.git"
+  },
+  "keywords": [
+    "Auth"
+  ],
+  "author": "netbofia",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/netbofia/node_auth_module/issues"
+  },
+  "homepage": "https://github.com/netbofia/node_auth_module#readme",
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "node_db_module": "^1.0.2"
+  }
+}
