@@ -1,6 +1,6 @@
 -- MariaDB dump 10.17  Distrib 10.4.13-MariaDB, for Linux (x86_64)
 --
--- Host: localhost    Database: sRNAPlantPortal
+-- Host: localhost
 -- ------------------------------------------------------
 -- Server version	10.4.13-MariaDB
 
