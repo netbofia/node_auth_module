@@ -12,3 +12,6 @@ class Authentication{
     fs.copyFileSync(__dirname+"/SQL/LATEST_dump.sql", destination+'/auth-datamodel.sql',COPYFILE_EXCL);
   }
 }
+
+
+module.exports=Authentication
