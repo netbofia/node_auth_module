@@ -47,7 +47,9 @@ module.exports=function(credentials){
     }
   }
   async function getUserInfo(id){
-    let data=await db.findByPk("Person",id)
+    let userMeta=await getUserMetadata(id)
+    let personId=userMeta.person
+    let data=await db.findByPk("Person",personId)
     return data.dataValues
   }
   async function getUserMetadata(id){
@@ -179,6 +181,21 @@ module.exports=function(credentials){
     // send to session
 
   }
+  async function listUsers(){ 
+    let sourceTable="User"
+    let tableConnections={"Person":{}}
+    let structure={
+      userId:"id",
+      personId:{_table:"Person",_attribute:"id"},
+      email:"email",
+      firstName:{_table:"Person",_attribute:"firstName"},
+      lastName:{_table:"Person",_attribute:"lastName"},
+      active:"active",
+      banned:"banned"
+    }
+    let results=await db.getStructuredResponse(sourceTable,tableConnections,structure)
+    return results.data
+  }
   return {
       register,
       activateUser,
@@ -191,6 +208,7 @@ module.exports=function(credentials){
       getUserInfo,
       getUserMetadata,
       getIdFromEmail,
-      hashPassword
+      hashPassword,
+      listUsers
     } 
 }

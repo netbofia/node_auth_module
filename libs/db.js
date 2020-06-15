@@ -8,7 +8,7 @@ module.exports=function(credentials){
     return db.db[tablename].findByPk(pk,attributes)
   }
   function getStructuredResponse(sourceTable,tableConnections,structure){
-    return db.usecontroller(sourceTable,tableConnections,structure)
+    return db.useController(sourceTable,tableConnections,structure)
   }
   function create(tablename,attributes){
     return db.db[tablename].create(attributes)

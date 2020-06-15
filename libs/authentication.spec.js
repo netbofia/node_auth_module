@@ -20,14 +20,14 @@ before(function(){
 describe("Test authentication functions",function(){
   it("Verify created user and person",async function(){
     let id=this.id
-    let person=await auth.getUserInfo(id)
     let user=await auth.getUserMetadata(id)
+    let person=await auth.getUserInfo(id)
     assert.equal(person.firstName,firstname,"Created the correct firstname!")
     assert.equal(person.lastName,lastname,"Created the correct lastname!")
     assert.equal(user.email,email,"Created the correct email!")
     assert.isNotTrue(user.active,"Created user is inactive!")    
     assert.isNotTrue(user.ban,"Created user is not banned!")   
-  })
+  })  
   it("Ban mock user",async function(){
     let id=this.id
     let ban=await auth.banUser(id)
@@ -53,6 +53,12 @@ describe("Test authentication functions",function(){
     assert.isTrue(activeState,"User is Active!")
   })
 })
+describe("Test list users",function(){
+  it("Test structure structure",async function(){
+    let result=await auth.listUsers()
+    assert.isArray(result)
+  })
+})
 describe("Successful login with callback for session information",function(){
   let ipv4="127.0.0.1"
   let ipv6="::ffff:127.0.0.1"
@@ -67,6 +73,13 @@ describe("Successful login with callback for session information",function(){
       return await session.saveSession(id,ipv4,ipv6,platform,valid,city,country)
     }
     assert.equal(result.ipv4,ipv4,"Verify data was inserted")
+  })
+  it("List sessions and verify the token isn't exported",async function(){
+    let id = this.id
+    let results=await session.listSessions(id)
+    assert.isArray(results)
+    let randomResultIndex=Math.floor(Math.random()*(results.length))
+    assert.notExists(results[randomResultIndex].accessToken);
   })
 })
 describe("Testing login",function(){
@@ -113,7 +126,6 @@ describe("Test registering with an existing email",function(){
     assert.equal(result.message,"This email is already registered to another user! Either recovery this account or use another email!")
   })
 })
-
 /*
 describe("Testing repeated failed logins",function(){
   before(async function(){
@@ -142,8 +154,12 @@ describe("Testing repeated failed logins",function(){
 
 after(async function(){
   let id=await auth.getIdFromEmail(email)
+  let metadata=await auth.getUserMetadata(id)
+  let personId=metadata.person
+  
   let destroyed=await db.destroy("Access",{where:{user_id:id}})
   destroyed=await db.destroy("User",{where:{id}})
+  destroyed=await db.destroy("Person",{where:{id:personId}})
   let user=await auth.getUserMetadata(id)
   assert.isNull(user,"check that the user doesn't exist anymore")
   console.log("Destroyed record!")

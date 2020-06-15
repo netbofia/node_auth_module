@@ -27,9 +27,24 @@ module.exports=function(credentials){
     let accessToken=await auth.hashPassword(randomString)
     return accessToken
   }
-
+  async function listSessions(user_id){
+    let sessions=await db.findAll("Access",{where:{user_id}})
+    let results=[]
+    sessions.forEach(session=>{
+      let temp=removeAccessTokenFromExport(session)
+      results.push(temp)
+    })
+    return results
+    function removeAccessTokenFromExport(session){
+      let result=Object.assign({},session.dataValues)
+      delete result.accessToken
+      return result
+    }
+  }
 
   return {
-    saveSession
+    saveSession,
+    listSessions,
+    revokeSession
   }
 }
