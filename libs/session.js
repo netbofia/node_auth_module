@@ -42,9 +42,16 @@ module.exports=function(credentials){
     }
   }
 
+  async function validateSession(id,accessToken){
+    let result=await db.findByPk("Access",id)
+    let storedAccessToken=result.accessToken
+    return accessToken === storedAccessToken
+  }
+
   return {
     saveSession,
     listSessions,
-    revokeSession
+    revokeSession,
+    validateSession
   }
 }

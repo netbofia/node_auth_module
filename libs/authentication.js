@@ -174,9 +174,6 @@ module.exports=function(credentials){
     //revoke session
   }
 
-  function validateSession(id,accessToken){
-    // send to session
-  }
   function getUserFromToken(token){
     // send to session
 
@@ -191,24 +188,24 @@ module.exports=function(credentials){
       firstName:{_table:"Person",_attribute:"firstName"},
       lastName:{_table:"Person",_attribute:"lastName"},
       active:"active",
-      banned:"banned"
+      banned:"ban"
     }
     let results=await db.getStructuredResponse(sourceTable,tableConnections,structure)
     return results.data
   }
   return {
-      register,
-      activateUser,
-      inactivateUser,
-      banUser,
-      unbanUser,
-      isBanned,
-      isActive,
-      validateLogin,
-      getUserInfo,
-      getUserMetadata,
-      getIdFromEmail,
-      hashPassword,
-      listUsers
-    } 
+    register,
+    activateUser,
+    inactivateUser,
+    banUser,
+    unbanUser,
+    isBanned,
+    isActive,
+    validateLogin,
+    getUserInfo,
+    getUserMetadata,
+    getIdFromEmail,
+    hashPassword,
+    listUsers
+  } 
 }

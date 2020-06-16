@@ -53,7 +53,7 @@ describe("Test authentication functions",function(){
     assert.isTrue(activeState,"User is Active!")
   })
 })
-describe("Test list users",function(){
+describe("List users",function(){
   it("Test structure structure",async function(){
     let result=await auth.listUsers()
     assert.isArray(result)
@@ -73,6 +73,8 @@ describe("Successful login with callback for session information",function(){
       return await session.saveSession(id,ipv4,ipv6,platform,valid,city,country)
     }
     assert.equal(result.ipv4,ipv4,"Verify data was inserted")
+    let validate=await session.validateSession(result.id,result.accessToken)
+    assert.isTrue(validate,"Testing the session accessToken validation")
   })
   it("List sessions and verify the token isn't exported",async function(){
     let id = this.id
