@@ -3,13 +3,23 @@ const bcrypt=require('bcrypt')
 
 module.exports=function(credentials){
   const db=require('./db')(credentials)
-  async function register(firstName,lastName,email,password){
+  async function register(firstName,lastName,email,password,thirdparty){
     let personModel=await db.create("Person",{firstName,lastName})
     let person=""
     if(personModel.dataValues){
       if(personModel.dataValues.id) person=personModel.dataValues.id  
     }
-    let hash=await hashPassword(password)
+    let hash=""
+    if(password==null && thirdparty===true){
+      password=Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      hash=await hashPassword(password)
+    }else{
+      if(password.legnth<8){
+        return new Error("This password is too short! Must be at least 8 characters")
+      }else{
+        hash=await hashPassword(password)
+      }
+    }
     let confirmationToken=await generateConfirmationToken()
     let ban=0
     try{
@@ -72,8 +82,14 @@ module.exports=function(credentials){
     }catch(err){
       return err
     }
-    
-
+  }
+  async function getConfirmationToken(id){
+    try{
+      let user=await getUserMetadata(id)
+      return user.confirmationToken
+    }catch(error){
+      return error
+    }
   }
   async function generateConfirmationToken(){
     let randomString=Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
@@ -104,12 +120,30 @@ module.exports=function(credentials){
     let user=await getUserMetadata(id)
     return user.active
   }
+  
   function changePassword(id,oldpassword,newpassword){
     if(validatePassword(id,oldpassword)){
       setNewPassword
     }
+  }
+  function resetPassword(email,){
 
   }
+  function resetPassword(id){
+      //generate random password
+      //set random generated passaword for user id
+  }
+  async function setPassword(id,password){
+    try{
+      let data=await db.update("User",{password},{where:{id}})
+      return true
+    }catch(err){
+      return false  
+    }
+  }
+
+
+
   async function validateLogin(email,password,callback){
     let id=await getIdFromEmail(email)
     if(!(id instanceof Error)){
@@ -150,22 +184,25 @@ module.exports=function(credentials){
       return false
     }
   }
-
+  async function validateEmailConfirmationToken(email,confirmationToken){
+    try{
+      let id=await getIdFromEmail(email)
+      let storedConfirmationToken=await getConfirmationToken(id)
+      let activeStatus=await isActive(id)
+      if(storedConfirmationToken===confirmationToken && activeStatus===true){
+        return true
+      }else{
+        return false
+      }
+    }catch(err){
+      return false
+    }
+  }
 
 
   function challengeIdentityEmail(){
 
   }
-
-  function resetPassword(id){
-      //generate random password
-      //set random generated passaword for user id
-  }
-  async function setPassword(id,password){
-    let data=await db.update("User",{password},{where:{id}})
-    console.log(data)  
-  }
-
 
   function login(id){
     //start session
@@ -206,6 +243,7 @@ module.exports=function(credentials){
     getUserMetadata,
     getIdFromEmail,
     hashPassword,
-    listUsers
+    listUsers,
+    validateEmailConfirmationToken
   } 
 }
