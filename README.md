@@ -1,6 +1,9 @@
 # node_auth_module
-Authentication module using node_db_module
-# Import the db [schema](/netbofia/node_auth_module/blob/master/SQL/schema.sql)
+Authentication module using (node_db_module)[https://github.com/netbofia/node_db_module/]
+
+This uses the sequelize framework to provide an authentication frameowork to integrate with your application, using supported SQL OSBDs.
+
+# Import the db [schema](https://github.com/netbofia/node_auth_module/blob/master/SQL/schema.sql)
 ``` bash
 mysql -u [user] -D [database] -p < sql/schema.sql
 ```
