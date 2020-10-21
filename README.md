@@ -1,5 +1,5 @@
 # node_auth_module
-Authentication module using (node_db_module)[https://github.com/netbofia/node_db_module/]
+Authentication module using [node_db_module](https://github.com/netbofia/node_db_module/)
 
 This uses the sequelize framework to provide an authentication frameowork to integrate with your application, using supported SQL OSBDs.
 
