@@ -15,7 +15,7 @@ mysql -u [user] -D [database] -p < sql/schema.sql
 const Auth =  require('node_auth_module')
 const authModule=new Auth(".config_auth.js")
 ```
-* .config_auth.js is the JSON file with the credentials
+* .config_auth.js is the JSON file with the credentials this file should be in the root of **your app**. (Not of this required module)
 ``` json
 {
   "sql": {
