@@ -15,6 +15,25 @@ mysql -u [user] -D [database] -p < sql/schema.sql
 const Auth =  require('node_auth_module')
 const authModule=new Auth(".config_auth.js")
 ```
+* .config_auth.js is the JSON file with the credentials
+``` json
+{
+  "sql": {
+    "host":"127.0.0.1", 
+    "database":"yourdatabasename",
+    "username":"yourusername",
+    "password":"yourpassword",
+    "dialect":"mysql",
+    "logging":false,
+    "timezone":"+00:00"
+  },
+  "seedDB":false,
+  "seedMongoDB":false,
+  "seedDBForce":true,
+  "db":"sql"
+}
+```
+Then a run one of the following function 
 
 ## Authentication
 
@@ -84,7 +103,7 @@ authModule.auth.activateUser(id)
   
 * Usage:
 ``` js
-authModule.register(firstName,lastName,email,password,thirdparty)
+authModule.session.saveSession(user_id,ipv4,ipv6,platform,valid,city,country)
 ```
 ### listSessions
 * type: async function 
@@ -96,7 +115,7 @@ authModule.register(firstName,lastName,email,password,thirdparty)
   
 * Usage:
 ``` js
-authModule.listSessions(userId)
+authModule.session.listSessions(userId)
 ```
 ### revokeSession
 * type: async function 
