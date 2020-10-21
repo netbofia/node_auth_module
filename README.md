@@ -27,14 +27,14 @@ const authModule=new Auth(".config_auth.js")
   - password (sring)
   - thirdparty (boolean) [optional]
   
-* returns id 
-  - if all goes well
+* returns id (int)
+  - The primary key (id) of the table User
 * return error
   - if there is some problem
   
 * Usage:
 ``` js
-authModule.register(firstName,lastName,email,password,thirdparty)
+authModule.auth.register(firstName,lastName,email,password,thirdparty)
 ```
   
 ### activateUser
@@ -42,14 +42,14 @@ authModule.register(firstName,lastName,email,password,thirdparty)
 * parameters: id
   - id (int)
   
-* returns active
+* returns ??
   - db model with update result
 * return error
   - if there is some problem (it should at least)
   
 * Usage:
 ``` js
-authModule.activateUser(id)
+authModule.auth.activateUser(id)
 ```
 ### inactivateUser
 ### banUser
@@ -67,7 +67,59 @@ authModule.activateUser(id)
 ## Session
 
 ### saveSession
-### listSessions,
-### revokeSession,
+* type: async function 
+* parameters: user_id,ipv4,ipv6,platform,valid,city,country
+  - user_id (int)
+  - ipv4 (string)
+  - ipv6 (string)
+  - platform (sring)
+  - valid (boolean)
+  - city (string)
+  - country (string)
+  
+* returns id 
+  - if all goes well
+* return error
+  - if there is some problem
+  
+* Usage:
+``` js
+authModule.register(firstName,lastName,email,password,thirdparty)
+```
+### listSessions
+* type: async function 
+* parameters: userId
+  - userId (int) [Primary key (id) from table Person]
+  
+* returns (array) 
+  - List of all the session for the userId, the accessToken will not be present in the array
+  
+* Usage:
+``` js
+authModule.listSessions(userId)
+```
+### revokeSession
+* type: async function 
+* parameters: id
+  - id (int)
+  
+* returns ??
+  - update result
+  
+* Usage:
+``` js
+authModule.session.revokeSession(firstName,lastName,email,password,thirdparty)
+```
 ### validateSession
-
+* type: async function 
+* parameters: id,accessToken
+  - id (int)
+  - accessToken (string)
+  
+* returns (boolean)
+  - Valid or Not
+  
+* Usage:
+``` js
+authModule.session.validateSession(id,accessToken)
+```
