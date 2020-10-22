@@ -8,14 +8,8 @@ This uses the sequelize framework to provide an authentication frameowork to int
 mysql -u [user] -D [database] -p < sql/schema.sql
 ```
 # Configure credentials
+The basic credentials structure is the following. They can be setup as a file in the root that is passed on when instancing the module. You can also send the JSON directly if you are storing the varibles as ENV variables. Ex: ```(...),password:proccess.env.PASSWORD,(...)```
 
-
-# Simple example
-``` js
-const Auth =  require('node_auth_module')
-const authModule=new Auth(".config_auth.js")
-```
-* .config_auth.js is the JSON file with the credentials this file should be in the root of **your app**. (Not of this required module)
 ``` json
 {
   "sql": {
@@ -33,7 +27,15 @@ const authModule=new Auth(".config_auth.js")
   "db":"sql"
 }
 ```
-Then a run one of the following function 
+
+
+# Simple example
+``` js
+const Auth =  require('node_auth_module')
+const authModule=new Auth(".config_auth.js")
+```
+* .config_auth.js is the JSON file with the credentials this file should be in the root of **your app**. (Not of this required module)
+Then run one of the following functions 
 
 ## Authentication
 
@@ -82,6 +84,7 @@ authModule.auth.activateUser(id)
 ### hashPassword
 ### listUsers
 ### validateEmailConfirmationToken
+(Not implemented yet!)
 
 ## Session
 
