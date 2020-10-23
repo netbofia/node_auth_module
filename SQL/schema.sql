@@ -13,8 +13,8 @@ CREATE TABLE `User` (
 
 CREATE TABLE `Person` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(254) NOT NULL,
-  `last_name` varchar(254) NOT NULL,
+  `firstName` varchar(254) NOT NULL,
+  `lastName` varchar(254) NOT NULL,
   `orcid` varchar(254),
   PRIMARY KEY (`id`)
 );
