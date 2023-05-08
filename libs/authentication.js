@@ -66,6 +66,7 @@ module.exports=function(credentials){
     if(typeof id == "number"){
       let data=await db.findByPk("User",id)
       if(data!=null){
+        delete data.dataValues.hash
         return data.dataValues 
       }else{
         return null  
@@ -128,17 +129,24 @@ module.exports=function(credentials){
     return user.active
   }
   
-  function changePassword(id,oldpassword,newpassword){
+  async function changePassword(id,oldpassword,newpassword){
     if(validatePassword(id,oldpassword)){
-      setNewPassword
+      if(await setNewPassword(id,newpassword)==true){
+        return true
+      }else{
+        return false
+      }
+    }else{
+      return false
     }
   }
-  function resetPassword(email,){
 
-  }
-  function resetPassword(id){
-      //generate random password
-      //set random generated passaword for user id
+  async function resetPassword(id){
+    let randomString=Math.random().toString(36).substring(10, 15) + Math.random().toString(36).substring(5, 10);
+    let newHash=await hashPassword(randomString)
+    let update=await db.findByPk(id).update({hash:newHash})
+    if(update instanceof Error) return update
+    return randomString
   }
   async function setPassword(id,password){
     try{
@@ -242,6 +250,7 @@ module.exports=function(credentials){
     activateUser,
     inactivateUser,
     banUser,
+    changePassword,
     unbanUser,
     isBanned,
     isActive,
