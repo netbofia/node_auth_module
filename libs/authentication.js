@@ -96,6 +96,13 @@ module.exports=function(credentials){
     let confirmationToken=await hashPassword(randomString)
     return confirmationToken
   }
+  async function setNewConfirmationToken(id){
+    let confirmationToken=await generateConfirmationToken()
+    let data=await db.findByPk("User",id).update({confirmationToken})
+    if(data instanceof Error) return data
+    return confirmationToken
+  }
+
   async function activateUser(id){
     let active=await db.update("User",{active:1},{where:{id}})
     return active
@@ -242,6 +249,7 @@ module.exports=function(credentials){
     getUserInfo,
     getUserMetadata,
     getIdFromEmail,
+    setNewConfirmationToken,
     hashPassword,
     listUsers,
     validateEmailConfirmationToken
