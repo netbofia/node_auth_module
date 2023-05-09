@@ -130,7 +130,7 @@ authModule.session.listSessions(userId)
   
 * Usage:
 ``` js
-authModule.session.revokeSession(firstName,lastName,email,password,thirdparty)
+authModule.session.revokeSession(id)
 ```
 ### validateSession
 * type: async function 
