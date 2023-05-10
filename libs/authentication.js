@@ -159,7 +159,7 @@ module.exports=function(credentials){
 
 
 
-  async function validateLogin(email,password,callback){
+  async function validateLogin(email,password,callback,req,res){
     let id=await getIdFromEmail(email)
     if(!(id instanceof Error)){
       let validPassword=await validatePassword(id,password)
@@ -169,19 +169,19 @@ module.exports=function(credentials){
         if( !banned && activeUser ){
           console.log("Logged in")
           let err=null
-          return callback(err,id)
+          return callback(err,id,req,res,thirdparty=false,success="Logged in!",gPicture=null)
         }else{
           let err=new Error("Login is valid but user is inactive or banned")
-          callback(err,id)
+          return callback(err,id)
         }
       }else{
         incrementAuthAttempt(id)
         let err=new Error("Invalid password!")
-        callback(err,id)      
+        return callback(err,id)
       }
     }else{
       let err=new Error("Invalid email!")
-      callback(err,id)
+      return callback(err,id)
       
     }
 
