@@ -80,9 +80,7 @@ authModule.auth.activateUser(id)
 ### validateLogin
 ##### validateLogin(email,password,callback,req,res)
 * type:async function
-* request and result are required to process login in callback
-* Returns: What every happens in the callback function. Generally used to set alternative response in case of error in callback. 
-
+* Returns: What every happens in the callback function. Generally used to set alternative response in case of error in callback. {action,path,payload}
 ### getUserInfo
 ### getUserMetadata
 ### getIdFromEmail
