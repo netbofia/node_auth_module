@@ -20,7 +20,7 @@ module.exports=function(credentials){
   }
   async function revokeSession(id){
     let revokedOn=new Date()
-    return await db.upgrade("Session",{revokedOn},{where:{id}})
+    return await db.update("Access",{revokedOn, valid:0},{where:{id}})
   }
   async function generateAccessToken(){
     let randomString=Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
