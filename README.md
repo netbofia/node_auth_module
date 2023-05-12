@@ -77,6 +77,11 @@ authModule.auth.activateUser(id)
 ### unbanUser
 ### isBanned
 ### isActive
+### resetpassword
+##### resetpassword(id)
+* type:asycn function
+* Returns: new password
+  
 ### validateLogin
 ##### validateLogin(email,password,callback,req,res)
 * type:async function
@@ -87,7 +92,14 @@ authModule.auth.activateUser(id)
 ### hashPassword
 ### listUsers
 ### validateEmailConfirmationToken
-(Not implemented yet!)
+##### validateEmailConfirmationToken(email,confirmationToken)
+* Validates the confirmation token belongs to the email user
+* parameters: email, confirmationToken
+* Returns: boolean
+###setNewConfirmationToken
+##### setNewConfirmationToken(id)
+Generates a new confirmation token and stores it for the user.
+* Returns confirmation token 
 
 ## Session
 

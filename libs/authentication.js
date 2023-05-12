@@ -3,11 +3,12 @@ const bcrypt=require('bcrypt')
 
 module.exports=function(credentials){
   const db=require('./db')(credentials)
+
   async function register(firstName,lastName,email,password,thirdparty){
     let personModel=await db.create("Person",{firstName,lastName})
     let person=""
     if(personModel.dataValues){
-      if(personModel.dataValues.id) person=personModel.dataValues.id  
+      if(personModel.dataValues.id) person=personModel.dataValues.id
     }
     let hash=""
     if(password==null && thirdparty===true){
@@ -28,16 +29,17 @@ module.exports=function(credentials){
     }catch(err){
       if(err.name=="SequelizeUniqueConstraintError"){
         if(Object.keys(err.fields).includes("email")){
-          return new Error('This email is already registered to another user! Either recovery this account or use another email!')    
+          return new Error('This email is already registered to another user! Either recovery this account or use another email!')
         }else{
           return new Error(err.errors)
         }
       }else{
         return new Error(err)
-      } 
-    } 
+      }
+    }
   }
-  function hashPassword(password){  
+
+  function hashPassword(password){
     return new Promise((res,rej)=>{
       bcrypt.genSalt(10,function(err, salt){
         bcrypt.hash(password,salt,function(err,hash){
@@ -47,30 +49,45 @@ module.exports=function(credentials){
       })
     })
   }
+
   async function verifyEmail(id){
     return getUserMetadata(id).confirmationToken
   }
+
   async function incrementAuthAttempt(id){
     let attempts=await db.increment("User","attempt",{where:{id}})
     if(attempts>5){
       inactivateUser(id)
     }
   }
+
   async function getUserInfo(id){
     let userMeta=await getUserMetadata(id)
     let personId=userMeta.person
     let data=await db.findByPk("Person",personId)
     return data.dataValues
   }
+  async function getUserHash(id){
+    if(typeof id == "number"){
+      let data=await db.findByPk("User",id)
+      if(data!=null){
+        return data.dataValues.hash
+      }else{
+        return null
+      }
+    }else{
+      throw new Error('While getting user hash, an incorrect or no id was provided!')
+    }
+  }
   async function getUserMetadata(id){
     if(typeof id == "number"){
       let data=await db.findByPk("User",id)
       if(data!=null){
         delete data.dataValues.hash
-        return data.dataValues 
+        return data.dataValues
       }else{
-        return null  
-      } 
+        return null
+      }
     }else{
       throw Error('While getting user info, an incorrect or no id was provided!')
     }
@@ -78,7 +95,7 @@ module.exports=function(credentials){
   async function getIdFromEmail(email){
     try{
       let data=await db.findAll("User",{where:{email}})
-      let id=data[0].dataValues.id  
+      let id=data[0].dataValues.id
       return id
     }catch(err){
       return err
@@ -99,7 +116,7 @@ module.exports=function(credentials){
   }
   async function setNewConfirmationToken(id){
     let confirmationToken=await generateConfirmationToken()
-    let data=await db.findByPk("User",id).update({confirmationToken})
+    let data=await db.update("User",{confirmationToken},{where:{id}})
     if(data instanceof Error) return data
     return confirmationToken
   }
@@ -128,14 +145,10 @@ module.exports=function(credentials){
     let user=await getUserMetadata(id)
     return user.active
   }
-  
+
   async function changePassword(id,oldpassword,newpassword){
-    if(validatePassword(id,oldpassword)){
-      if(await setNewPassword(id,newpassword)==true){
-        return true
-      }else{
-        return false
-      }
+    if(await validatePassword(id,oldpassword)===true){
+      return await setNewPassword(id, newpassword) === true;
     }else{
       return false
     }
@@ -144,16 +157,18 @@ module.exports=function(credentials){
   async function resetPassword(id){
     let randomString=Math.random().toString(36).substring(10, 15) + Math.random().toString(36).substring(5, 10);
     let newHash=await hashPassword(randomString)
-    let update=await db.findByPk(id).update({hash:newHash})
+    let update=await db.update("User",{hash:newHash},{where: {id}})
     if(update instanceof Error) return update
     return randomString
   }
-  async function setPassword(id,password){
+
+  async function setNewPassword(id,password){
     try{
-      let data=await db.update("User",{password},{where:{id}})
+      let hash=await hashPassword(password)
+      let data=await db.update("User",{hash},{where:{id}})
       return true
     }catch(err){
-      return false  
+      return false
     }
   }
 
@@ -164,7 +179,7 @@ module.exports=function(credentials){
     if(!(id instanceof Error)){
       let validPassword=await validatePassword(id,password)
       if(validPassword){
-        let activeUser=await isActive(id) 
+        let activeUser=await isActive(id)
         let banned=await isBanned(id)
         if( !banned && activeUser ){
           console.log("Logged in")
@@ -182,7 +197,7 @@ module.exports=function(credentials){
     }else{
       let err=new Error("Invalid email!")
       return callback(err,id)
-      
+
     }
 
   }
@@ -191,8 +206,7 @@ module.exports=function(credentials){
   }
   async function validatePassword(id,password){
     try{
-      let user=await getUserMetadata(id)
-      let storedHash=user.hash
+      let storedHash=await getUserHash(id)
       return bcrypt.compareSync(password, storedHash)
     }catch(err){
       console.log(err)
@@ -230,7 +244,7 @@ module.exports=function(credentials){
     // send to session
 
   }
-  async function listUsers(){ 
+  async function listUsers(){
     let sourceTable="User"
     let tableConnections={"Person":{}}
     let structure={
@@ -261,6 +275,7 @@ module.exports=function(credentials){
     setNewConfirmationToken,
     hashPassword,
     listUsers,
-    validateEmailConfirmationToken
-  } 
+    validateEmailConfirmationToken,
+    resetPassword
+  }
 }
