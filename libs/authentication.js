@@ -184,7 +184,7 @@ module.exports=function(credentials){
         if( !banned && activeUser ){
           console.log("Logged in")
           let err=null
-          return callback(err,id,thirdparty=false,success="Logged in!")
+          return callback(err,id,false,"Logged in!")
         }else{
           let err=new Error("Login is valid but user is inactive or banned")
           return callback(err,id)
