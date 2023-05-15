@@ -1,5 +1,6 @@
 "use strict"
 const bcrypt=require('bcrypt')
+const crypto=require('crypto')
 
 module.exports=function(credentials){
   const db=require('./db')(credentials)
@@ -109,13 +110,12 @@ module.exports=function(credentials){
       return error
     }
   }
-  async function generateConfirmationToken(){
-    let randomString=Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    let confirmationToken=await hashPassword(randomString)
-    return confirmationToken
+  function generateConfirmationToken(){
+    let confirmationCode=crypto.randomInt(10000000,99999999)
+    return confirmationCode
   }
   async function setNewConfirmationToken(id){
-    let confirmationToken=await generateConfirmationToken()
+    let confirmationToken=generateConfirmationToken()
     let data=await db.update("User",{confirmationToken},{where:{id}})
     if(data instanceof Error) return data
     return confirmationToken
