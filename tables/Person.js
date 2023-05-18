@@ -22,8 +22,8 @@
      classMethods: {
         associate: function associate(models) {    
           Person.belongsTo(models.User, {
-            foreignKey: 'id',              //on Person
-            targetKey: 'person',  //foreign key  
+            foreignKey: 'email',              //on Person
+            targetKey: 'email',  //foreign key
           }); 
         }
       },

@@ -32,8 +32,8 @@
             targetKey: 'user_id',  //foreign key  
           });
           User.belongsTo(models.Person, {
-            foreignKey: 'person',              //on User
-            targetKey: 'id',  //foreign key  
+            foreignKey: 'email',              //on User
+            targetKey: 'email',  //foreign key
           }); 
         }
       },
