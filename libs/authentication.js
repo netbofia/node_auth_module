@@ -61,8 +61,9 @@ module.exports=function(credentials){
 
   async function getUserInfo(id){
     let userMeta=await getUserMetadata(id)
-    let personId=userMeta.person
-    let data=await db.findByPk("Person",personId)
+    let email=userMeta.email
+    let data=await db.findByPk("Person",email)
+    if (data instanceof Error) throw data
     return data.dataValues
   }
   async function getUserHash(id){
