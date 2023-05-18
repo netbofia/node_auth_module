@@ -6,9 +6,9 @@
 
   module.exports = function(sequelize, DataTypes) {
     const Person = sequelize.define('Person', {
-      id: { 
-        type: DataTypes.INTEGER(11),
-        autoIncrement: true,
+      email: {
+        type: DataTypes.STRING(254),
+        autoIncrement: false,
         primaryKey: true,
         allowNull: false,
         unique: true,
@@ -19,7 +19,6 @@
       tableName: 'Person',
       timestamps: false,
       underscored: false,
-
      classMethods: {
         associate: function associate(models) {    
           Person.belongsTo(models.User, {

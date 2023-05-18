@@ -6,11 +6,8 @@ module.exports=function(credentials){
   const db=require('./db')(credentials)
 
   async function register(firstName,lastName,email,password,thirdparty){
-    let personModel=await db.create("Person",{firstName,lastName})
-    let person=""
-    if(personModel.dataValues){
-      if(personModel.dataValues.id) person=personModel.dataValues.id
-    }
+    let personModel=await db.create("Person",{firstName,lastName,email})
+    if(personModel instanceof Error) throw personModel
     let hash=""
     if(password==null && thirdparty===true){
       password=Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
@@ -25,7 +22,7 @@ module.exports=function(credentials){
     let confirmationToken=await generateConfirmationToken()
     let ban=0
     try{
-      let user=await db.create("User",{person,email,hash,confirmationToken,ban})
+      let user=await db.create("User",{email,hash,confirmationToken,ban})
       return user.dataValues.id
     }catch(err){
       if(err.name=="SequelizeUniqueConstraintError"){

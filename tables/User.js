@@ -14,7 +14,6 @@
         unique: true,
       },
     email: DataTypes.STRING(254),
-    person: DataTypes.INTEGER(11),
     hash: DataTypes.STRING(254),
     createdOn: DataTypes.DATE,
     confirmationToken: DataTypes.STRING(254),
