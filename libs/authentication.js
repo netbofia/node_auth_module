@@ -176,7 +176,7 @@ module.exports=function(credentials){
     let id=await getIdFromEmail(email)
     if(!(id instanceof Error)){
       let validPassword=await validatePassword(id,password)
-      if(validPassword){
+      if(validPassword === true){
         let activeUser=await isActive(id)
         let banned=await isBanned(id)
         if( !banned && activeUser ){
